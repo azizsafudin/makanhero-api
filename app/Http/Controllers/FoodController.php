@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\GetCoords;
 use App\Http\Requests\StoreFood;
 use App\Food;
 use Illuminate\Support\Facades\Auth;
@@ -78,7 +79,7 @@ class FoodController extends Controller
         if (!$food) {
             return response()->json([
                 'error'   => 'resource_not_found',
-                'message' => 'Food does not exist.',
+                'message' => 'Food offer does not exist.',
             ], 404);
         }
 
@@ -105,5 +106,30 @@ class FoodController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getNearby(GetCoords $request){
+
+        if (!isset($request->range) || empty($request->range)) {
+            $range = 25; //Range in kilometers
+        } else {
+            $range = $request->range;
+        }
+
+        $lat = $request->lat;
+        $lng = $request->lng;
+
+        $foods = Food::with('user')->select('foods.*')
+            ->selectRaw('( 3959 * acos( cos( radians(?) ) *
+                           cos( radians( start_lat ) )
+                           * cos( radians( start_lng ) - radians(?)
+                           ) + sin( radians(?) ) *
+                           sin( radians( start_lat ) ) )
+                         ) AS distance', [$lat, $lng, $lat])
+            ->havingRaw("distance < ?", [$range])
+            ->get();
+        return response()->json([
+            'data' => $foods,
+        ], 200);
     }
 }

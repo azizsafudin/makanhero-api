@@ -25,9 +25,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['prefix' => '/v1'], function () {
     // Routes which require auth
     Route::group([
-        "middleware" => ['jwt.auth', 'cors'],
+        "middleware" => ['jwt.auth'],
     ], function () {
-
+        Route::get('nearby-foods', 'FoodController@getNearby');
         //Resources
         Route::resource('foods', 'FoodController',['only' => ['index', 'show', 'store', 'update', 'destroy']]);
         Route::resource('comments', 'CommentController', ['only' => ['index', 'show', 'store', 'destroy']]);

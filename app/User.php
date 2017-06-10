@@ -39,9 +39,9 @@ class User extends Authenticatable
     ];
 
     public function foods(){
-        return $this->hasMany('App\food');
+        return $this->hasMany('App\food')->withTrashed();
     }
     public function comments(){
-        return $this->hasMany('App\comment');
+        return $this->hasMany('App\comment')->withTrashed();
     }
 }

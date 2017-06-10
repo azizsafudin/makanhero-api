@@ -16,6 +16,5 @@ class UserController extends Controller
             'message' => 'User added successfully.',
             'data'    => $user,
         ], 200);
-
     }
 }

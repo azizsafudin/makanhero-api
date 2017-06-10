@@ -79,6 +79,8 @@ class AuthenticateController extends Controller
         $food_saved = count($user->comments);
         $food_offered = count($user->foods);
 
+
+
         $user['saved']      = $food_saved;
         $user['offered']    = $food_offered;
         return response()->json(compact('user'), 200);
