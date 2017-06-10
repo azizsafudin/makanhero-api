@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreFood;
-use Illuminate\Http\Request;
+use App\Food;
 use Illuminate\Support\Facades\Auth;
 
 class FoodController extends Controller
@@ -24,7 +24,6 @@ class FoodController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  Illuminate\\Http\Request\StoreFood  $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreFood $request)
@@ -65,7 +64,6 @@ class FoodController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */

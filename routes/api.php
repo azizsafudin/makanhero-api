@@ -30,7 +30,7 @@ Route::group(['prefix' => '/v1'], function () {
 
         //Resources
         Route::resource('foods', 'FoodController',['only' => ['index', 'show', 'store', 'update', 'destroy']]);
-        Route::resource('comments', 'CommentController', ['only' => ['index', 'show', 'store', 'update', 'destroy']]);
+        Route::resource('comments', 'CommentController', ['only' => ['index', 'show', 'store', 'destroy']]);
     });
 
     //Routes which does not require auth
