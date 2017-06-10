@@ -35,13 +35,13 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'comments', 'foods',
     ];
 
     public function foods(){
-        return $this->hasMany('food');
+        return $this->hasMany('App\food');
     }
     public function comments(){
-        return $this->hasMany('comment');
+        return $this->hasMany('App\comment');
     }
 }

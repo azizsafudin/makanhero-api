@@ -19,7 +19,6 @@ class CreateCommentsTable extends Migration
             $table->integer('food_id');
             $table->integer('status');
             $table->timestamps();
-            $table->primary('id');
         });
     }
 

@@ -11,12 +11,12 @@ class Comment extends Model
     ];
     public function user(){
 
-        return $this->belongsTo('user');
+        return $this->belongsTo('App\user');
 
     }
     public function food(){
 
-        return $this->belongsTo('food');
+        return $this->belongsTo('App\food');
 
     }
 }

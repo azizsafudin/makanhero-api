@@ -56,6 +56,10 @@ class FoodController extends Controller
                 'message' => 'Food does not exist.',
             ], 404);
         }
+
+        $latestcomment = $food->comments->orderBy('upload_time', 'desc')->first();
+
+        $food['status'] = $latestcomment->status;
         return response()->json([
             'data' => $food,
         ], 200);

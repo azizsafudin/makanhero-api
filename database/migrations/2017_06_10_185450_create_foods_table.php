@@ -22,7 +22,6 @@ class CreateFoodsTable extends Migration
             $table->text('body')->nullable();
             $table->integer('type');
             $table->timestamps();
-            $table->primary('id');
         });
     }
 

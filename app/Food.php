@@ -11,12 +11,12 @@ class Food extends Model
     ];
     public function user(){
 
-        return $this->belongsTo('user');
+        return $this->belongsTo('App\user');
 
     }
     public function comments(){
 
-        return $this->hasMany('comment');
+        return $this->hasMany('App\comment');
 
     }
 }
