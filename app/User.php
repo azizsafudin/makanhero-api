@@ -3,11 +3,14 @@
 namespace App;
 
 use Illuminate\Notifications\Notifiable;
+use Alsofronie\Uuid\Uuid32ModelTrait;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, Uuid32ModelTrait;
+
+    private static $uuidOptimization = true;
 
     /**
      * The attributes that are mass assignable.
@@ -15,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'dp', 'gender', 'points'
     ];
 
     /**
@@ -26,4 +29,11 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function foods(){
+        return $this->hasMany('food');
+    }
+    public function comments(){
+        return $this->hasMany('comment');
+    }
 }

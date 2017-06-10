@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -15,4 +17,19 @@ use Illuminate\Http\Request;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+// Routes which does not require auth
+Route::post('auth', 'AuthenticateController@auth');
+Route::get('auth/refresh', 'AuthenticateController@refresh');
+
+
+
+Route::group(['prefix' => '/v1'], function () {
+    // Routes which require auth
+    Route::group([
+        "middleware" => ['jwt.auth'],
+    ], function () {
+
+    });
 });
