@@ -20,6 +20,14 @@ class User extends Authenticatable
     protected $fillable = [
         'name', 'email', 'password', 'dp', 'gender', 'points'
     ];
+    /**
+     * Set default values for these fields
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'points' => 0,
+    ];
 
     /**
      * The attributes that should be hidden for arrays.

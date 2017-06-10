@@ -19,9 +19,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Routes which does not require auth
-Route::post('auth', 'AuthenticateController@auth');
-Route::get('auth/refresh', 'AuthenticateController@refresh');
 
 
 
@@ -32,4 +29,8 @@ Route::group(['prefix' => '/v1'], function () {
     ], function () {
 
     });
+
+    //Routes which does not require auth
+    Route::post('auth', 'AuthenticateController@auth');
+    Route::get('auth/refresh', 'AuthenticateController@refresh');
 });

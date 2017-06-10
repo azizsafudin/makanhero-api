@@ -15,10 +15,10 @@ class AuthenticateController extends Controller
     {
         $this->middleware('jwt.refresh')->only('refresh');
     }
-    public function authenticate(Authenticate $request)
+    public function auth(Authenticate $request)
     {
-        $credentials['email']       = $request->email;
-        $credentials['password']    = Hash::make($request->password);
+        $credentials = $request->only('email', 'password');
+
 
         try {
             // verify the credentials and create a token for the user
