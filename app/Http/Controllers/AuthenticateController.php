@@ -76,7 +76,6 @@ class AuthenticateController extends Controller
             return response()->json(['token_absent'], $e->getStatusCode());
 
         }
-
         return response()->json(compact('user'), 200);
     }
 

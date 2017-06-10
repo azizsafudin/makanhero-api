@@ -28,6 +28,9 @@ Route::group(['prefix' => '/v1'], function () {
         "middleware" => ['jwt.auth'],
     ], function () {
 
+        //Resources
+        Route::resource('foods', 'FoodController',['only' => ['index', 'show', 'store', 'update', 'destroy']]);
+        Route::resource('comments', 'CommentController', ['only' => ['index', 'show', 'store', 'update', 'destroy']]);
     });
 
     //Routes which does not require auth

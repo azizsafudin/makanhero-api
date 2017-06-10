@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Food extends Model
 {
+    protected $fillable = [
+        'user_id', 'title', 'lat', 'lng', 'body'
+    ];
     public function user(){
 
         return $this->belongsTo('user');

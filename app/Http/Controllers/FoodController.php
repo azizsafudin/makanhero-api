@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreFood;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class FoodController extends Controller
 {
@@ -13,28 +15,30 @@ class FoodController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $foods = Food::all();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return response()->json([
+            'data' => $foods,
+        ], 200);
     }
-
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Illuminate\\Http\Request\StoreFood  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreFood $request)
     {
-        //
+        $data               = $request->all();
+        $data['user_id']    = Auth::user()->id;
+
+        $food = Food::create($data);
+
+        return response()->json([
+            'message' => 'Food offer added successfully.',
+            'data'    => $food,
+        ], 200);
+
     }
 
     /**
@@ -45,18 +49,17 @@ class FoodController extends Controller
      */
     public function show($id)
     {
-        //
-    }
+        $food = Food::find($id);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        if (!$food) {
+            return response()->json([
+                'error'   => 'resource_not_found',
+                'message' => 'Food does not exist.',
+            ], 404);
+        }
+        return response()->json([
+            'data' => $food,
+        ], 200);
     }
 
     /**
@@ -66,9 +69,29 @@ class FoodController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreFood $request, $id)
     {
-        //
+        $food = Food::find($id);
+
+        if (!$food) {
+            return response()->json([
+                'error'   => 'resource_not_found',
+                'message' => 'Food does not exist.',
+            ], 404);
+        }
+
+        if ($food->user_id != Auth::user()->id) {
+            return response()->json([
+                'error'   => 'forbidden_request',
+                'message' => 'User does not have permission to edit this food offer.',
+            ], 403);
+        }
+        $food->fill($request->all());
+        $food->save();
+        return response()->json([
+            'message' => 'Food offer successfully updated.',
+            'data' => $food,
+        ], 200);
     }
 
     /**
