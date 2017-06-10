@@ -33,4 +33,5 @@ Route::group(['prefix' => '/v1'], function () {
     //Routes which does not require auth
     Route::post('auth', 'AuthenticateController@auth');
     Route::get('auth/refresh', 'AuthenticateController@refresh');
+    Route::get('me', 'AuthenticateController@getAuthenticatedUser');
 });
