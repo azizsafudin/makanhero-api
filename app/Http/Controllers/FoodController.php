@@ -18,7 +18,7 @@ class FoodController extends Controller
      */
     public function index()
     {
-        $foods = Food::orderby('created_at', 'desc')->get();
+        $foods = Food::orderby('expiry', 'desc')->get();
 
         //INEFFICIENT DONT DO THIS
         foreach($foods as $food){
@@ -172,7 +172,7 @@ class FoodController extends Controller
     }
 
     public function getComments($id){
-        $food = Food::with('comments')->where('id', $id)->first();
+        $food = Food::with('comments', 'comments.user')->where('id', $id)->first();
 
         if(!$food){
             return response()->json([
@@ -204,6 +204,27 @@ class FoodController extends Controller
                 $food['status'] = "A lot";
                 break;
         }
+        foreach($food->comments as $comment){
+
+            switch ($comment['status']) {
+                case 0:
+                    $comment['status'] = "No more";
+                    break;
+                case 1:
+                    $comment['status'] = "Very little";
+                    break;
+                case 2:
+                    $comment['status'] = "Some";
+                    break;
+                case 3:
+                    $comment['status'] = "Plenty";
+                    break;
+                case 4:
+                    $comment['status'] = "A lot";
+                    break;
+            }
+        }
+
         return response()->json([
             'data' => $food,
         ], 200);
