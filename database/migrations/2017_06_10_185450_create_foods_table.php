@@ -22,6 +22,7 @@ class CreateFoodsTable extends Migration
             $table->double('lng', 10, 6);
             $table->text('body')->nullable();
             $table->string('type');
+            $table->datetime('expiry');
             $table->timestamps();
             $table->softDeletes();
 

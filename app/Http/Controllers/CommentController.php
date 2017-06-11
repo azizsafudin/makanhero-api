@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreComment;
 use App\Http\Requests\StoreFood;
 use App\Comment;
+use App\Food;
 use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
@@ -32,7 +33,7 @@ class CommentController extends Controller
         $data               = $request->all();
         $data['user_id']    = Auth::user()->id;
 
-        $comment = Food::create($data);
+        $comment = Comment::create($data);
 
         return response()->json([
             'message' => 'Comment added successfully.',

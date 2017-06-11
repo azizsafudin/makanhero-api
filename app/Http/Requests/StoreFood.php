@@ -25,10 +25,12 @@ class StoreFood extends FormRequest
     {
         return [
             'title' => 'required|max:128',
+            'loc_name'=>'required|max:255',
             'lat'   => 'required|between:-90,90',
             'lng'   => 'required|between:-180,180',
-            'body'  => 'required|max:255',
-            'type'  => 'required|max',
+            'body'  => 'nullable|max:255',
+            'type'  => 'required|max:255',
+            'expiry'=> 'required|date_format:Y-m-d H:i:s'
         ];
     }
 }

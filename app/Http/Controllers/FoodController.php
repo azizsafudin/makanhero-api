@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\GetCoords;
 use App\Http\Requests\StoreFood;
 use App\Food;
+use App\Comment;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class FoodController extends Controller
 {
@@ -16,7 +18,10 @@ class FoodController extends Controller
      */
     public function index()
     {
-        $foods = Food::all();
+        $foods = Food::with(['comments' => function($query){
+            $query->orderBy('created_at', 'desc'); //you may use any condition here or manual select operation
+            $query->first(); //select operation
+        }])->get();
 
         return response()->json([
             'data' => $foods,
@@ -33,6 +38,16 @@ class FoodController extends Controller
         $data['user_id']    = Auth::user()->id;
 
         $food = Food::create($data);
+
+        $now = Carbon::now();
+        $expiry = Carbon::createFromFormat('Y-m-d H:i:s', $request->expiry);
+        if($now >= $expiry){
+            return response()->json([
+                'error'   => 'invalid_request',
+                'message' => 'Unable to create an offer at that date/time.',
+            ], 422);
+
+        }
 
         return response()->json([
             'message' => 'Food offer added successfully.',
@@ -58,9 +73,14 @@ class FoodController extends Controller
             ], 404);
         }
 
-        $latestcomment = $food->comments->orderBy('upload_time', 'desc')->first();
+        $latestcomment = Comment::where('food_id',$id)->orderBy('created_at', 'desc')->first();
 
-        $food['status'] = $latestcomment->status;
+        if(!empty($latestcomment) || isset($latestcomment)) {
+            $food['status'] = $latestcomment['status'];
+        }else{
+            $food['status'] = 4;
+        }
+
         return response()->json([
             'data' => $food,
         ], 200);
