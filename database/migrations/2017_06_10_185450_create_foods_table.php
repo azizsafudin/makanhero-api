@@ -17,11 +17,11 @@ class CreateFoodsTable extends Migration
             $table->increments('id');
             $table->char('user_id', 32);
             $table->string('title');
-            $table->string('loc_name');
+            $table->string('loc_name')->nullable();
             $table->double('lat', 10, 6);
             $table->double('lng', 10, 6);
             $table->text('body')->nullable();
-            $table->string('type');
+            $table->string('type')->nullable();
             $table->datetime('expiry');
             $table->timestamps();
             $table->softDeletes();

@@ -24,7 +24,7 @@ class StoreComment extends FormRequest
     public function rules()
     {
         return [
-            'body'      => 'required|max:255',
+            'body'      => 'nullable|max:255',
             'food_id'   => 'required|integer',
             'status'    => 'required|integer|between:0,4',
         ];

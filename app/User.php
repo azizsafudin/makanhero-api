@@ -11,7 +11,6 @@ class User extends Authenticatable
     use Notifiable, Uuid32ModelTrait;
 
     private static $uuidOptimization = true;
-
     /**
      * The attributes that are mass assignable.
      *
@@ -27,6 +26,7 @@ class User extends Authenticatable
      */
     protected $attributes = [
         'points' => 0,
+        'dp'     => 'https://lh6.googleusercontent.com/-C8EOOPgV2jA/VKhomirnV-I/AAAAAAAAAAs/9iynth2mnmo/superman-facebook.jpg',
     ];
 
     /**

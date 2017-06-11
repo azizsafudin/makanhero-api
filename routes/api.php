@@ -27,7 +27,8 @@ Route::group(['prefix' => '/v1'], function () {
     Route::group([
         "middleware" => ['jwt.auth'],
     ], function () {
-        Route::get('nearby-foods', 'FoodController@getNearby');
+        //Route::get('nearby-foods', 'FoodController@getNearby');
+        Route::get('foods/{food}/comments', 'FoodController@getComments');
         //Resources
         Route::resource('foods', 'FoodController',['only' => ['index', 'show', 'store', 'update', 'destroy']]);
         Route::resource('comments', 'CommentController', ['only' => ['index', 'show', 'store', 'destroy']]);

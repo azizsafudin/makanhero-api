@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Authenticate;
 use JWTAuth;
+use App\User;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\Auth;
@@ -79,10 +80,25 @@ class AuthenticateController extends Controller
         $food_saved = count($user->comments);
         $food_offered = count($user->foods);
 
-
-
         $user['saved']      = $food_saved;
         $user['offered']    = $food_offered;
+        $user['points']     = $food_offered*5 + $food_saved;
+        $user['rank']       = 'Potato';
+
+        if($user['points'] >=0 && $user['points'] < 10){
+            $user['rank']       = 'Wannabe';
+
+        }elseif($user['points'] >=10 && $user['points'] < 20){
+            $user['rank']       = 'Hero';
+
+        }elseif($user['points'] >=20 && $user['points'] < 30){
+            $user['rank']       = 'SuperHero';
+
+        }elseif($user['points'] >=40){
+            $user['rank']       = 'MakanHero';
+
+        }
+
         return response()->json(compact('user'), 200);
     }
 

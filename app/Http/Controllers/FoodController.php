@@ -18,11 +18,38 @@ class FoodController extends Controller
      */
     public function index()
     {
-        $foods = Food::with(['comments' => function($query){
-            $query->orderBy('created_at', 'desc'); //you may use any condition here or manual select operation
-            $query->first(); //select operation
-        }])->get();
+        $foods = Food::orderby('created_at', 'desc')->get();
 
+        //INEFFICIENT DONT DO THIS
+        foreach($foods as $food){
+            $latestcomment = Comment::where('food_id',$food->id)->orderBy('created_at', 'desc')->first();
+
+            if(!empty($latestcomment) || isset($latestcomment)) {
+
+                $food['status'] = $latestcomment['status'];
+            }else{
+                $food['status'] = 4;
+            }
+            switch ($food['status']){
+                case 0:
+                    $food['status'] = "No more";
+                        break;
+                case 1:
+                    $food['status'] = "Very little";
+                        break;
+                case 2:
+                    $food['status'] = "Some";
+                        break;
+                case 3:
+                    $food['status'] = "Plenty";
+                        break;
+                case 4:
+                    $food['status'] = "A lot";
+                        break;
+            }
+
+            $food['expiry'] = Carbon::now()->createFromFormat('Y-m-d H:i:s', $food['expiry'])->diffForHumans();
+        }
         return response()->json([
             'data' => $foods,
         ], 200);
@@ -80,7 +107,23 @@ class FoodController extends Controller
         }else{
             $food['status'] = 4;
         }
-
+        switch ($food['status']) {
+            case 0:
+                $food['status'] = "No more";
+                break;
+            case 1:
+                $food['status'] = "Very little";
+                break;
+            case 2:
+                $food['status'] = "Some";
+                break;
+            case 3:
+                $food['status'] = "Plenty";
+                break;
+            case 4:
+                $food['status'] = "A lot";
+                break;
+        }
         return response()->json([
             'data' => $food,
         ], 200);
@@ -128,28 +171,66 @@ class FoodController extends Controller
         //
     }
 
-    public function getNearby(GetCoords $request){
+    public function getComments($id){
+        $food = Food::with('comments')->where('id', $id)->first();
 
-        if (!isset($request->range) || empty($request->range)) {
-            $range = 25; //Range in kilometers
-        } else {
-            $range = $request->range;
+        if(!$food){
+            return response()->json([
+                'error'   => 'resource_not_found',
+                'message' => 'Food does not exist.',
+            ], 404);
         }
+        $latestcomment = Comment::where('food_id',$id)->orderBy('created_at', 'desc')->first();
 
-        $lat = $request->lat;
-        $lng = $request->lng;
-
-        $foods = Food::with('user')->select('foods.*')
-            ->selectRaw('( 3959 * acos( cos( radians(?) ) *
-                           cos( radians( start_lat ) )
-                           * cos( radians( start_lng ) - radians(?)
-                           ) + sin( radians(?) ) *
-                           sin( radians( start_lat ) ) )
-                         ) AS distance', [$lat, $lng, $lat])
-            ->havingRaw("distance < ?", [$range])
-            ->get();
+        if(!empty($latestcomment) || isset($latestcomment)) {
+            $food['status'] = $latestcomment['status'];
+        }else{
+            $food['status'] = 4;
+        }
+        switch ($food['status']) {
+            case 0:
+                $food['status'] = "No more";
+                break;
+            case 1:
+                $food['status'] = "Very little";
+                break;
+            case 2:
+                $food['status'] = "Some";
+                break;
+            case 3:
+                $food['status'] = "Plenty";
+                break;
+            case 4:
+                $food['status'] = "A lot";
+                break;
+        }
         return response()->json([
-            'data' => $foods,
+            'data' => $food,
         ], 200);
     }
+
+//    public function getNearby(GetCoords $request){
+//
+//        if (!isset($request->range) || empty($request->range)) {
+//            $range = 25; //Range in kilometers
+//        } else {
+//            $range = $request->range;
+//        }
+//
+//        $lat = $request->lat;
+//        $lng = $request->lng;
+//
+//        $foods = Food::with('user')->select('foods.*')
+//            ->selectRaw('( 3959 * acos( cos( radians(?) ) *
+//                           cos( radians( start_lat ) )
+//                           * cos( radians( start_lng ) - radians(?)
+//                           ) + sin( radians(?) ) *
+//                           sin( radians( start_lat ) ) )
+//                         ) AS distance', [$lat, $lng, $lat])
+//            ->havingRaw("distance < ?", [$range])
+//            ->get();
+//        return response()->json([
+//            'data' => $foods,
+//        ], 200);
+//    }
 }

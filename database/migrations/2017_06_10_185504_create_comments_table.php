@@ -18,7 +18,7 @@ class CreateCommentsTable extends Migration
             $table->char('user_id', 32);
             $table->integer('food_id')->unsigned();
             $table->integer('status');
-            $table->text('body');
+            $table->text('body')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
